@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HousingLocation } from './housinglocation';
+import axios from "axios";
 
 @Injectable({
   providedIn: 'root'
 })
 export class HousingService {
   readonly baseUrl = 'https://angular.io/assets/images/tutorials/faa';
+  url = 'https://64c092070d8e251fd1123435.mockapi.io/homes';
 
   protected housingLocationList: HousingLocation[] = [
     {
@@ -110,12 +112,17 @@ export class HousingService {
     }
   ];
 
-  getAllHousingLocations(): HousingLocation[] {
-    return this.housingLocationList;
+  async getAllHousingLocations(): Promise<HousingLocation[]> {
+    const { data } = await axios.get(this.url);
+    console.log('data1: ', data);
+    return data;
   }
 
-  getHousingLocationById(id: number): HousingLocation | undefined {
-    return this.housingLocationList.find(housingLocation => housingLocation.id === id);
+  async getHousingLocationById(id: number): Promise<any | any> {
+    const { data } = await axios.get(`${this.url}/?id=${id}`);
+    // https://64c092070d8e251fd1123435.mockapi.io/homes/?id=1
+    console.log('data2: ', data);
+    return data[0];
   }
 
   submitApplication(firstName: string, lastName: string, email: string) {
